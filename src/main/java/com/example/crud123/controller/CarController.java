@@ -1,5 +1,6 @@
 package com.example.crud123.controller;
 
+import com.example.crud123.dto.CarDto;
 import com.example.crud123.model.Car;
 import com.example.crud123.service.CarService;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,8 @@ public class CarController {
   }
 
   @PostMapping("/cars")
-  public ResponseEntity<Car> createCar(@RequestBody Car car) {
-    Car createdCar = carService.createCar(car);
+  public ResponseEntity<Car> createCar(@RequestBody CarDto carDto) {
+    Car createdCar = carService.createCar(carDto);
     return new ResponseEntity<>(createdCar, HttpStatus.CREATED);
   }
 

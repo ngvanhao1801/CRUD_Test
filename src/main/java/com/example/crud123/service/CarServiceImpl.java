@@ -1,9 +1,11 @@
 package com.example.crud123.service;
 
+import com.example.crud123.dto.CarDto;
 import com.example.crud123.exception.DuplicateException;
 import com.example.crud123.exception.NotFoundException;
 import com.example.crud123.model.Car;
 import com.example.crud123.repository.CarRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +15,12 @@ import java.util.Optional;
 public class CarServiceImpl implements CarService {
   private final CarRepository carRepository;
 
-  public CarServiceImpl(CarRepository carRepository) {
+  public CarServiceImpl(CarRepository carRepository, ModelMapper modelMapper) {
     this.carRepository = carRepository;
+    this.modelMapper = modelMapper;
   }
+
+  private final ModelMapper modelMapper;
 
   @Override
   public List<Car> getAllCars() {
@@ -36,23 +41,29 @@ public class CarServiceImpl implements CarService {
   }
 
   @Override
-  public Car createCar(Car car) {
-    if (carRepository.existsByCarName(car.getCarName())) {
+  public Car createCar(CarDto carDto) {
+    if (carRepository.existsByCarName(carDto.getCarName())) {
       throw new DuplicateException("Tên xe đã tồn tại");
     }
+    Car car = modelMapper.map(carDto, Car.class);
     return carRepository.save(car);
   }
 
   @Override
   public Car updateCar(Long id, Car car) {
+    return null;
+  }
+
+  @Override
+  public Car updateCar(Long id, CarDto carDto) {
     Optional<Car> existingCar = carRepository.findById(id);
     if (!existingCar.isPresent()) {
       throw new NotFoundException("Không tìm thấy xe với id: " + id);
     }
-    if (carRepository.existsByCarNameAndIdNot(car.getCarName(), id)) {
+    if (carRepository.existsByCarNameAndIdNot(carDto.getCarName(), id)) {
       throw new DuplicateException("Tên xe đã tồn tại");
     }
-    car.setId(id);
+    Car car = modelMapper.map(carDto, Car.class);
     return carRepository.save(car);
   }
 
