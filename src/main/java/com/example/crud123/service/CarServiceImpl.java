@@ -4,9 +4,6 @@ import com.example.crud123.exception.DuplicateException;
 import com.example.crud123.exception.NotFoundException;
 import com.example.crud123.model.Car;
 import com.example.crud123.repository.CarRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +15,24 @@ public class CarServiceImpl implements CarService {
 
   public CarServiceImpl(CarRepository carRepository) {
     this.carRepository = carRepository;
+  }
+
+  @Override
+  public List<Car> getAllCars() {
+    List<Car> cars = carRepository.findAll();
+    if (cars.isEmpty()) {
+      throw new NotFoundException("Không tìm thấy xe nào");
+    }
+    return cars;
+  }
+
+  @Override
+  public Optional<Car> getCarById(Long id) {
+    Optional<Car> car = carRepository.findById(id);
+    if (car.isEmpty()) {
+      throw new NotFoundException("Không tìm thấy xe với id: " + id);
+    }
+    return car;
   }
 
   @Override
@@ -47,23 +62,5 @@ public class CarServiceImpl implements CarService {
       throw new NotFoundException("Không tìm thấy xe với id: " + id);
     }
     carRepository.deleteById(id);
-  }
-
-  @Override
-  public Optional<Car> getCarById(Long id) {
-    Optional<Car> car = carRepository.findById(id);
-    if (car.isEmpty()) {
-      throw new NotFoundException("Không tìm thấy xe với id: " + id);
-    }
-    return car;
-  }
-
-  @Override
-  public List<Car> getAllCars() {
-    List<Car> cars = carRepository.findAll();
-    if (cars.isEmpty()) {
-      throw new NotFoundException("Không tìm thấy xe nào");
-    }
-    return cars;
   }
 }

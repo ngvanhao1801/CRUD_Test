@@ -14,19 +14,19 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-  @Entity
-  public class Car {
+@Entity
+public class Car {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    private String carName;
+  private String carName;
 
-    private int year;
+  private int year;
 
-    private double price;
+  private double price;
 
-    private String address;
+  private String address;
 
-  }
+}
