@@ -22,7 +22,7 @@ public class CarServiceImpl implements CarService {
   public Car createCar(Car car) {
     // Kiểm tra trùng lặp theo tên car
     if (carRepository.existsByCarName(car.getCarName())) {
-      throw new DuplicateException("Car name already exists");
+      throw new DuplicateException("Tên xe đã tồn tại");
     }
     return carRepository.save(car);
   }
@@ -31,11 +31,11 @@ public class CarServiceImpl implements CarService {
   public Car updateCar(Long id, Car car) {
     Optional<Car> existingCar = carRepository.findById(id);
     if (!existingCar.isPresent()) {
-      throw new NotFoundException("Car not found with id: " + id);
+      throw new NotFoundException("Không tìm thấy xe với id: " + id);
     }
     // Kiểm tra trùng lặp theo tên car (trừ khi đang update chính nó)
     if (carRepository.existsByCarNameAndIdNot(car.getCarName(), id)) {
-      throw new DuplicateException("Car name already exists");
+      throw new DuplicateException("Tên xe đã tồn tại");
     }
     car.setId(id);
     return carRepository.save(car);
@@ -44,7 +44,7 @@ public class CarServiceImpl implements CarService {
   @Override
   public void deleteCar(Long id) {
     if (!carRepository.existsById(id)) {
-      throw new NotFoundException("Car not found with id: " + id);
+      throw new NotFoundException("Không tìm thấy xe với id: " + id);
     }
     carRepository.deleteById(id);
   }
@@ -58,7 +58,7 @@ public class CarServiceImpl implements CarService {
   public List<Car> getAllCars() {
     List<Car> cars = carRepository.findAll();
     if (cars.isEmpty()) {
-      throw new NotFoundException("No cars found");
+      throw new NotFoundException("Không tìm thấy xe nào");
     }
     return cars;
   }
