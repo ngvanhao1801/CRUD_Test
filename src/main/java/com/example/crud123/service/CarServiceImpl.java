@@ -20,7 +20,6 @@ public class CarServiceImpl implements CarService {
 
   @Override
   public Car createCar(Car car) {
-    // Kiểm tra trùng lặp theo tên car
     if (carRepository.existsByCarName(car.getCarName())) {
       throw new DuplicateException("Tên xe đã tồn tại");
     }
@@ -33,7 +32,6 @@ public class CarServiceImpl implements CarService {
     if (!existingCar.isPresent()) {
       throw new NotFoundException("Không tìm thấy xe với id: " + id);
     }
-    // Kiểm tra trùng lặp theo tên car (trừ khi đang update chính nó)
     if (carRepository.existsByCarNameAndIdNot(car.getCarName(), id)) {
       throw new DuplicateException("Tên xe đã tồn tại");
     }
