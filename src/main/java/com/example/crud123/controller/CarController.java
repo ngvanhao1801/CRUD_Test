@@ -15,15 +15,25 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping(path = "/control")
 public class CarController {
-  public static Logger logger = (Logger) LoggerFactory.getLogger(CarController.class);
-
   private final CarService carService;
 
   public CarController(CarService carService) {
+
     this.carService = carService;
   }
 
-  @PostMapping("/cars/post")
+  @GetMapping("/cars")
+  public ResponseEntity<List<Car>> getAllCars() {
+    List<Car> cars = carService.getAllCars();
+    return new ResponseEntity<>(cars, HttpStatus.OK);
+  }
+
+  @GetMapping("/cars/{id}")
+  public ResponseEntity<Car> getCarById(@PathVariable Long id) {
+    Optional<Car> car = carService.getCarById(id);
+      return new ResponseEntity<>(car.get(), HttpStatus.OK);
+  }
+  @PostMapping("/cars")
   public ResponseEntity<Car> createCar(@RequestBody Car car) {
     Car createdCar = carService.createCar(car);
     return new ResponseEntity<>(createdCar, HttpStatus.CREATED);
@@ -39,21 +49,5 @@ public class CarController {
   public ResponseEntity<String> deleteCar(@PathVariable Long id) {
     carService.deleteCar(id);
     return new ResponseEntity<>("Đã xoá thành công", HttpStatus.OK);
-  }
-
-  @GetMapping("/cars/{id}")
-  public ResponseEntity<Car> getCarById(@PathVariable Long id) {
-    Optional<Car> car = carService.getCarById(id);
-    if (car.isPresent()) {
-      return new ResponseEntity<>(car.get(), HttpStatus.OK);
-    } else {
-      throw new NotFoundException("Không tìm thấy xe với id: " + id);
-    }
-  }
-
-  @GetMapping("/cars/all")
-  public ResponseEntity<List<Car>> getAllCars() {
-    List<Car> cars = carService.getAllCars();
-    return new ResponseEntity<>(cars, HttpStatus.OK);
   }
 }

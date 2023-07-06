@@ -5,6 +5,8 @@ import com.example.crud123.exception.NotFoundException;
 import com.example.crud123.model.Car;
 import com.example.crud123.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,7 +51,11 @@ public class CarServiceImpl implements CarService {
 
   @Override
   public Optional<Car> getCarById(Long id) {
-    return carRepository.findById(id);
+    Optional<Car> car = carRepository.findById(id);
+    if (car.isEmpty()) {
+      throw new NotFoundException("Không tìm thấy xe với id: " + id);
+    }
+    return car;
   }
 
   @Override
