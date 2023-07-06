@@ -4,7 +4,6 @@ import com.example.crud123.exception.DuplicateException;
 import com.example.crud123.exception.NotFoundException;
 import com.example.crud123.model.Car;
 import com.example.crud123.repository.CarRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class CarServiceImpl implements CarService {
   @Override
   public Car updateCar(Long id, Car car) {
     Optional<Car> existingCar = carRepository.findById(id);
-    if (!existingCar.isPresent()) {
+    if (!existingCar.isEmpty()) {
       throw new NotFoundException("Car not found with id: " + id);
     }
     // Kiểm tra trùng lặp theo tên car (trừ khi đang update chính nó)
