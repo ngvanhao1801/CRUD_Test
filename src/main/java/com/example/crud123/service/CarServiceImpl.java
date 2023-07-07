@@ -3,9 +3,10 @@ package com.example.crud123.service;
 import com.example.crud123.dto.CarDto;
 import com.example.crud123.exception.DuplicateException;
 import com.example.crud123.exception.NotFoundException;
+import com.example.crud123.mapper.CarMapper;
 import com.example.crud123.model.Car;
 import com.example.crud123.repository.CarRepository;
-import org.modelmapper.ModelMapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +15,12 @@ import java.util.Optional;
 @Service
 public class CarServiceImpl implements CarService {
   private final CarRepository carRepository;
+  private final CarMapper carMapper;
 
-  public CarServiceImpl(CarRepository carRepository, ModelMapper modelMapper) {
+  public CarServiceImpl(CarRepository carRepository) {
     this.carRepository = carRepository;
-    this.modelMapper = modelMapper;
+    this.carMapper = Mappers.getMapper(CarMapper.class);
   }
-
-  private final ModelMapper modelMapper;
 
   @Override
   public List<Car> getAllCars() {
@@ -34,7 +34,7 @@ public class CarServiceImpl implements CarService {
   @Override
   public Optional<Car> getCarById(Long id) {
     Optional<Car> car = carRepository.findById(id);
-    if (car.isEmpty()) {
+    if (!car.isPresent()) {
       throw new NotFoundException("Không tìm thấy xe với id: " + id);
     }
     return car;
@@ -45,7 +45,7 @@ public class CarServiceImpl implements CarService {
     if (carRepository.existsByCarName(carDto.getCarName())) {
       throw new DuplicateException("Tên xe đã tồn tại");
     }
-    Car car = modelMapper.map(carDto, Car.class);
+    Car car = carMapper.toCar(carDto);
     return carRepository.save(car);
   }
 
@@ -63,7 +63,7 @@ public class CarServiceImpl implements CarService {
     if (carRepository.existsByCarNameAndIdNot(carDto.getCarName(), id)) {
       throw new DuplicateException("Tên xe đã tồn tại");
     }
-    Car car = modelMapper.map(carDto, Car.class);
+    Car car = carMapper.toCar(carDto);
     return carRepository.save(car);
   }
 

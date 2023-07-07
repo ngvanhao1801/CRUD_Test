@@ -38,8 +38,8 @@ public class CarController {
   }
 
   @PutMapping("/cars/{id}")
-  public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car car) {
-    Car updatedCar = carService.updateCar(id, car);
+  public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody CarDto carDto) {
+    Car updatedCar = carService.updateCar(id, carDto);
     return new ResponseEntity<>(updatedCar, HttpStatus.OK);
   }
 
