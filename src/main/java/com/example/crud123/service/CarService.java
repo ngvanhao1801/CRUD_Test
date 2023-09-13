@@ -7,14 +7,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CarService {
-  Car createCar(CarDto carDto);
-  Car updateCar(Long id, Car car);
 
-  Car updateCar(Long id, CarDto carDto);
+	Car createCar(CarDto carDto);
 
+	Car updateCar(Long id, CarDto carDto);
 
-  void deleteCar(Long id);
-  Optional<Car> getCarById(Long id);
-  List<Car> getAllCars();
+	void deleteCar(Long id);
+
+	Optional<Car> getCarById(Long id);
+
+	List<Car> getAllCars();
+
 }
 

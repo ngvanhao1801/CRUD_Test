@@ -10,11 +10,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarDto {
-  private String carName;
 
-  private int year;
+	private String carName;
 
-  private double price;
+	private int year;
 
-  private String address;
+	private double price;
+
+	private String address;
+
 }

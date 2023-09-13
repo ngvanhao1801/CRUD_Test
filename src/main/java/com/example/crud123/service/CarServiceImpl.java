@@ -14,64 +14,62 @@ import java.util.Optional;
 
 @Service
 public class CarServiceImpl implements CarService {
-  private final CarRepository carRepository;
-  private final CarMapper carMapper;
 
-  public CarServiceImpl(CarRepository carRepository) {
-    this.carRepository = carRepository;
-    this.carMapper = Mappers.getMapper(CarMapper.class);
-  }
+	private final CarRepository carRepository;
 
-  @Override
-  public List<Car> getAllCars() {
-    List<Car> cars = carRepository.findAll();
-    if (cars.isEmpty()) {
-      throw new NotFoundException("Không tìm thấy xe nào");
-    }
-    return cars;
-  }
+	private final CarMapper carMapper;
 
-  @Override
-  public Optional<Car> getCarById(Long id) {
-    Optional<Car> car = carRepository.findById(id);
-    if (!car.isPresent()) {
-      throw new NotFoundException("Không tìm thấy xe với id: " + id);
-    }
-    return car;
-  }
+	public CarServiceImpl(CarRepository carRepository) {
+		this.carRepository = carRepository;
+		this.carMapper = Mappers.getMapper(CarMapper.class);
+	}
 
-  @Override
-  public Car createCar(CarDto carDto) {
-    if (carRepository.existsByCarName(carDto.getCarName())) {
-      throw new DuplicateException("Tên xe đã tồn tại");
-    }
-    Car car = carMapper.toCar(carDto);
-    return carRepository.save(car);
-  }
+	@Override
+	public List<Car> getAllCars() {
+		List<Car> cars = carRepository.findAll();
+		if (cars.isEmpty()) {
+			throw new NotFoundException("Không tìm thấy xe nào");
+		}
+		return cars;
+	}
 
-  @Override
-  public Car updateCar(Long id, Car car) {
-    return null;
-  }
+	@Override
+	public Optional<Car> getCarById(Long id) {
+		Optional<Car> car = carRepository.findById(id);
+		if (!car.isPresent()) {
+			throw new NotFoundException("Không tìm thấy xe với id: " + id);
+		}
+		return car;
+	}
 
-  @Override
-  public Car updateCar(Long id, CarDto carDto) {
-    Optional<Car> existingCar = carRepository.findById(id);
-    if (!existingCar.isPresent()) {
-      throw new NotFoundException("Không tìm thấy xe với id: " + id);
-    }
-    if (carRepository.existsByCarNameAndIdNot(carDto.getCarName(), id)) {
-      throw new DuplicateException("Tên xe đã tồn tại");
-    }
-    Car car = carMapper.toCar(carDto);
-    return carRepository.save(car);
-  }
+	@Override
+	public Car createCar(CarDto carDto) {
+		if (carRepository.existsByCarName(carDto.getCarName())) {
+			throw new DuplicateException("Tên xe đã tồn tại");
+		}
+		Car car = carMapper.toCar(carDto);
+		return carRepository.save(car);
+	}
 
-  @Override
-  public void deleteCar(Long id) {
-    if (!carRepository.existsById(id)) {
-      throw new NotFoundException("Không tìm thấy xe với id: " + id);
-    }
-    carRepository.deleteById(id);
-  }
+	@Override
+	public Car updateCar(Long id, CarDto carDto) {
+		Optional<Car> existingCar = carRepository.findById(id);
+		if (!existingCar.isPresent()) {
+			throw new NotFoundException("Không tìm thấy xe với id: " + id);
+		}
+		if (carRepository.existsByCarNameAndIdNot(carDto.getCarName(), id)) {
+			throw new DuplicateException("Tên xe đã tồn tại");
+		}
+		Car car = carMapper.toCar(carDto);
+		return carRepository.save(car);
+	}
+
+	@Override
+	public void deleteCar(Long id) {
+		if (!carRepository.existsById(id)) {
+			throw new NotFoundException("Không tìm thấy xe với id: " + id);
+		}
+		carRepository.deleteById(id);
+	}
+
 }
